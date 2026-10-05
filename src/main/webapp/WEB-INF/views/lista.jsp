@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+<fmt:setLocale value="${not empty cookie.idiomaPreferido ? cookie.idiomaPreferido.value : 'es'}"/>
+<fmt:setBundle basename="messages"/>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,21 +14,30 @@
     <div class="cabecera">
         <h1>${applicationScope.nombreApp}</h1>
         <p class="saludo">
-            Bienvenido, ${sessionScope.usuarioActual.nombreCompleto}
+            <fmt:message key="lista.bienvenida"/>, ${sessionScope.usuarioActual.nombreCompleto}
             (${sessionScope.usuarioActual.rol}) |
-            <a href="${pageContext.request.contextPath}/app?comando=logout">Cerrar sesión</a>
+            <a href="${pageContext.request.contextPath}/app?comando=logout"><fmt:message key="lista.salir"/></a>
+        </p>
+        <p>
+            <a href="${pageContext.request.contextPath}/app?comando=idioma&lang=es">Español</a> |
+            <a href="${pageContext.request.contextPath}/app?comando=idioma&lang=en">English</a>
         </p>
     </div>
+
     <c:if test="${not empty error}">
         <p class="error">${error}</p>
     </c:if>
 
-    <a href="${pageContext.request.contextPath}/app?comando=formulario">+ Nueva tarea</a>
+    <a href="${pageContext.request.contextPath}/app?comando=formulario"><fmt:message key="lista.nueva"/></a>
 
     <table>
         <thead><tr>
-            <th>Título</th><th>Categoría</th><th>Prioridad</th>
-            <th>Fecha límite</th><th>Estado</th><th>Acciones</th>
+            <th><fmt:message key="lista.titulo"/></th>
+            <th><fmt:message key="lista.categoria"/></th>
+            <th><fmt:message key="lista.prioridad"/></th>
+            <th><fmt:message key="lista.fecha"/></th>
+            <th><fmt:message key="lista.estado"/></th>
+            <th><fmt:message key="lista.acciones"/></th>
         </tr></thead>
         <tbody>
         <c:forEach var="t" items="${tareas}">
@@ -35,11 +46,13 @@
                 <td>${t.categoria}</td>
                 <td>${t.prioridad}</td>
                 <td><fmt:formatDate value="${t.fechaLimite}" pattern="dd/MM/yyyy"/></td>
-                <td>${t.completada ? "Completada" : "Pendiente"}</td>
+                <td><fmt:message key="${t.completada ? 'lista.completada' : 'lista.pendiente'}"/></td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/app?comando=completar&id=${t.id}">Completar</a> |
+                    <a href="${pageContext.request.contextPath}/app?comando=completar&id=${t.id}">
+                        <fmt:message key="lista.completar"/></a> |
                     <a href="${pageContext.request.contextPath}/app?comando=eliminar&id=${t.id}"
-                       onclick="return confirm('¿Eliminar esta tarea?')">Eliminar</a>
+                       onclick="return confirm('<fmt:message key="lista.confirmar"/>')">
+                        <fmt:message key="lista.eliminar"/></a>
                 </td>
             </tr>
         </c:forEach>

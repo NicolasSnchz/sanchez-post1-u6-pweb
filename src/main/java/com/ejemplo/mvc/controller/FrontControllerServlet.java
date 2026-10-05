@@ -15,7 +15,7 @@ import java.util.Set;
 @WebServlet(name = "FrontControllerServlet", urlPatterns = {"/app"})
 public class FrontControllerServlet extends HttpServlet {
 
-    private static final Set<String> PUBLICOS = Set.of("login");
+    private static final Set<String> PUBLICOS = Set.of("login", "idioma");
     private final Map<String, Comando> comandos = new HashMap<>();
 
     @Override
@@ -37,9 +37,10 @@ public class FrontControllerServlet extends HttpServlet {
         comandos.put("eliminar",   new EliminarComando(tareaService));
         comandos.put("completar",  new CompletarComando(tareaService));
 
-        // Comandos de sesion
+        // Comandos de sesion e idioma
         comandos.put("login",      new LoginComando(authService));
         comandos.put("logout",     new LogoutComando());
+        comandos.put("idioma",     new IdiomaComando());
     }
 
     @Override
@@ -61,7 +62,7 @@ public class FrontControllerServlet extends HttpServlet {
         if (nombreComando == null) nombreComando = "listar";
 
         // Punto unico de control de sesion: se resuelve aqui, una sola vez,
-        // para todos los comandos protegidos (todos excepto login)
+        // para todos los comandos protegidos (todos excepto login/idioma)
         if (!PUBLICOS.contains(nombreComando)) {
             HttpSession session = req.getSession(false);
             if (session == null || session.getAttribute("usuarioActual") == null) {
