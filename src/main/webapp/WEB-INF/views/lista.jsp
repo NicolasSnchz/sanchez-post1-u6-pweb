@@ -9,7 +9,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
-    <h1>${applicationScope.nombreApp}</h1>
+    <div class="cabecera">
+        <h1>${applicationScope.nombreApp}</h1>
+        <p class="saludo">
+            Bienvenido, ${sessionScope.usuarioActual.nombreCompleto}
+            (${sessionScope.usuarioActual.rol}) |
+            <a href="${pageContext.request.contextPath}/app?comando=logout">Cerrar sesión</a>
+        </p>
+    </div>
     <c:if test="${not empty error}">
         <p class="error">${error}</p>
     </c:if>
